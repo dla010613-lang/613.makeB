@@ -82,6 +82,7 @@
       <button onclick="goToSlide(2)" class="nav-btn transition-colors hover:text-arch-textPrimary uppercase py-1" id="nav-2">03. Tactile Process</button>
       <button onclick="goToSlide(3)" class="nav-btn transition-colors hover:text-arch-textPrimary uppercase py-1" id="nav-3">04. Layer Inspector</button>
       <button onclick="goToSlide(4)" class="nav-btn transition-colors hover:text-arch-textPrimary uppercase py-1" id="nav-4">05. About & CV</button>
+      <button onclick="goToSlide(5)" class="nav-btn transition-colors hover:text-arch-textPrimary uppercase py-1" id="nav-5">06. Itsme</button>
     </nav>
 
     <div class="flex items-center space-x-6 text-xs font-mono">
@@ -89,6 +90,7 @@
       <a href="https://padlet.com/dla010613/padlet-s024hokosodq02xtmwvd" target="_blank" rel="noopener" class="font-sans text-[11px] uppercase tracking-widest hover:opacity-60 transition-opacity inline-flex items-center gap-1 no-underline">GUESTBOOK
         <svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M2 8 8 2M3.5 2H8v4.5"/></svg>
       </a>
+      <button onclick="goToSlide(5)" class="lg:hidden font-sans text-[11px] uppercase tracking-widest hover:opacity-60 transition-opacity">ITSME</button>
       <button onclick="goToSlide(4)" class="font-sans text-[11px] uppercase tracking-widest hover:opacity-60 transition-opacity">INFO</button>
     </div>
   </header>
@@ -300,6 +302,22 @@
         </div>
       </div>
     </section>
+
+    <!-- ================= SLIDE 5: ITSME (PHOTOGRAPHS) ================= -->
+    <section id="slide-5" class="slide w-full md:h-full flex flex-col gap-6 py-2 min-h-0" hidden>
+      <div class="flex flex-wrap gap-4 justify-between items-end w-full">
+        <div class="space-y-2">
+          <button id="album-back" onclick="showAlbums()" class="chrome font-mono text-[10px] uppercase tracking-widest text-arch-textMuted hover:text-arch-textPrimary flex items-center gap-2" hidden>
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M9 5H1M4.5 1.5 1 5l3.5 3.5"/></svg>
+            All albums
+          </button>
+          <span id="itsme-eyebrow" class="font-mono text-[10px] text-arch-textMuted uppercase tracking-widest block">Photographs — shot by Ji-Yeon Im</span>
+          <h2 id="itsme-title" class="text-2xl md:text-4xl font-extralight uppercase tracking-widest">Itsme</h2>
+        </div>
+        <span id="itsme-count" class="font-mono text-[10px] text-arch-textMuted uppercase tracking-widest"></span>
+      </div>
+      <div id="itsme-grid" class="flex-1 min-h-0 md:overflow-y-auto pr-1"></div>
+    </section>
   </main>
 
   <!-- FOOTER CONTROLS & SLIDE COUNTER -->
@@ -327,7 +345,12 @@
     </button>
   </div>
   <div class="draw my-auto w-full max-w-4xl mx-auto aspect-[4/3] max-h-[78vh] text-zinc-100" id="lightbox-draw" style="--card:#0b0b0c;--surface:#1a1a1c;--muted:#9a9aa0"></div>
-  <div class="font-mono text-[10px] text-zinc-500 text-center uppercase tracking-widest">CLICK ANYWHERE TO CLOSE INSPECTION</div>
+  <div id="lb-photo-nav" class="flex justify-between items-center font-mono text-[10px] text-zinc-400 uppercase tracking-widest" hidden>
+    <button onclick="event.stopPropagation(); stepPhoto(-1)" class="hover:text-white p-2">← Prev</button>
+    <span id="lb-photo-count"></span>
+    <button onclick="event.stopPropagation(); stepPhoto(1)" class="hover:text-white p-2">Next →</button>
+  </div>
+  <div id="lb-hint" class="font-mono text-[10px] text-zinc-500 text-center uppercase tracking-widest">CLICK ANYWHERE TO CLOSE INSPECTION</div>
 </div>
 
 <script>
@@ -407,7 +430,7 @@ document.getElementById("gestures").innerHTML = GESTURES.map(([n, t, svg]) => `
 
 /* ---------- slides ---------- */
 let currentSlide = 0;
-const totalSlides = 5;
+const totalSlides = 6;
 function goToSlide(index) {
   if (index < 0 || index >= totalSlides) return;
   for (let i = 0; i < totalSlides; i++) {
@@ -430,7 +453,11 @@ function nextSlide() { goToSlide((currentSlide + 1) % totalSlides); }
 window.addEventListener("keydown", e => {
   const lbOpen = !document.getElementById("lightbox-modal").hidden;
   if (e.key === "Escape") closeLightbox();
-  if (lbOpen) return;
+  if (lbOpen) {
+    if (lbPhoto && e.key === "ArrowRight") stepPhoto(1);
+    if (lbPhoto && e.key === "ArrowLeft") stepPhoto(-1);
+    return;
+  }
   if (e.key === "ArrowRight") nextSlide();
   if (e.key === "ArrowLeft") prevSlide();
 });
@@ -439,9 +466,13 @@ window.addEventListener("keydown", e => {
 let tx = null, ty = null;
 document.addEventListener("touchstart", e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
 document.addEventListener("touchend", e => {
-  if (tx === null || !document.getElementById("lightbox-modal").hidden) return;
+  if (tx === null) return;
+  const lbOpen = !document.getElementById("lightbox-modal").hidden;
   const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
-  if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) dx < 0 ? nextSlide() : prevSlide();
+  if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+    if (lbOpen) { if (lbPhoto) stepPhoto(dx < 0 ? 1 : -1); }
+    else dx < 0 ? nextSlide() : prevSlide();
+  }
   tx = ty = null;
 }, { passive: true });
 
@@ -476,13 +507,108 @@ function paintLayer(layer) {
 function toggleLayer(layer) { layers[layer] = !layers[layer]; paintLayer(layer); }
 Object.keys(layers).forEach(paintLayer);
 
+/* ---------- ITSME: my photographs ----------
+   사진 넣는 방법
+   폴더 구조 (index.html 과 같은 위치):
+     photos/
+       261014/  261014 (1).jpg  261014 (2).jpg  261014 (3).jpg ...
+       260906/  260906 (1).jpg  260906 (2).jpg ...
+   - 날짜 폴더 하나가 앨범 하나입니다. 아래 목록에 적은 순서대로 보입니다.
+   - count 에 그 폴더의 사진 장수를 적습니다. (1)번 사진이 앨범 표지가 됩니다.
+   - 새 날짜 폴더를 올리면 목록에 한 줄 추가하면 됩니다.
+   - title 을 비워두면 폴더 이름의 날짜(2026.10.14)가 제목으로 나옵니다. */
+const PHOTO_DIR = "photos";
+const PHOTO_EXT = "jpg";
+const ALBUMS = [
+  { id: "261014", title: "", caption: "", count: 3 },
+  { id: "260906", title: "", caption: "", count: 3 },
+];
+
+const fmtDate = s => /^\d{6}$/.test(s) ? `20${s.slice(0, 2)}.${s.slice(2, 4)}.${s.slice(4, 6)}` : s;
+ALBUMS.forEach(a => {
+  a.title = a.title || fmtDate(a.id);
+  a.photos = Array.from({ length: a.count }, (_, i) => `${a.id} (${i + 1}).${PHOTO_EXT}`);
+});
+/* 파일 이름의 공백과 괄호를 주소에 맞게 바꿔서 불러옵니다 */
+const photoSrc = (a, n) => `${PHOTO_DIR}/${encodeURIComponent(a.id)}/${encodeURIComponent(a.photos[n - 1])}`;
+/* 261014 (1).jpg → 2026.10.14 — 01 */
+function photoLabel(a, n) { return `${fmtDate(a.id)} — ${String(n).padStart(2, "0")}`; }
+const emptyBox = text => `<div class="w-full h-full bg-arch-surface flex flex-col items-center justify-center gap-2 text-arch-textMuted">${CAMERA}<span class="font-mono text-[10px] tracking-widest uppercase">${text}</span></div>`;
+const CAMERA = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><path d="M3 7h4l2-2.5h6L17 7h4v12H3z"/><circle cx="12" cy="13" r="3.6"/></svg>`;
+function photoBox(src, label, { fit = "cover", mono = false } = {}) {
+  return `<div class="relative w-full h-full bg-arch-surface overflow-hidden">
+    <div class="absolute inset-0 flex flex-col items-center justify-center gap-2 text-arch-textMuted">${CAMERA}<span class="font-mono text-[10px] tracking-widest">${label}</span></div>
+    <img src="${src}" alt="${label}" loading="lazy" onerror="this.remove()"
+      class="absolute inset-0 w-full h-full object-${fit} ${mono ? "grayscale contrast-125 opacity-85 group-hover:grayscale-0 group-hover:opacity-100" : ""} group-hover:scale-105 transition-all duration-500">
+  </div>`;
+}
+
+let openAlbumId = null;
+function setItsmeHeader(eyebrow, title, count, showBack) {
+  document.getElementById("itsme-eyebrow").textContent = eyebrow;
+  document.getElementById("itsme-title").textContent = title;
+  document.getElementById("itsme-count").textContent = count;
+  document.getElementById("album-back").hidden = !showBack;
+}
+function showAlbums() {
+  openAlbumId = null;
+  setItsmeHeader("Photographs — shot by Ji-Yeon Im", "Itsme", `${ALBUMS.length} albums`, false);
+  document.getElementById("itsme-grid").innerHTML = `<div class="grid grid-cols-2 md:grid-cols-4 gap-6">${ALBUMS.map(a => `
+    <button onclick="openAlbum('${a.id}')" class="group text-left space-y-3">
+      <div class="aspect-[4/5]">${a.photos.length ? photoBox(photoSrc(a, 1), photoLabel(a, 1), { mono: true }) : emptyBox("Coming soon")}</div>
+      <div class="space-y-1">
+        <span class="font-mono text-[9px] text-arch-textMuted uppercase tracking-widest">${a.id} / ${a.photos.length} photos</span>
+        <h3 class="text-xs uppercase tracking-wider font-normal group-hover:underline">${a.title}</h3>
+      </div>
+    </button>`).join("")}</div>`;
+}
+function openAlbum(id) {
+  const a = ALBUMS.find(x => x.id === id); if (!a) return;
+  openAlbumId = id;
+  setItsmeHeader(`Itsme / ${a.id}`, a.title, `${a.photos.length} photos`, true);
+  const items = a.photos.map((_, i) => i + 1);
+  document.getElementById("itsme-grid").innerHTML = `
+    ${a.caption ? `<p class="text-xs text-arch-textMuted font-light leading-relaxed max-w-xl mb-6">${a.caption}</p>` : ""}
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">${items.map(n => `
+      <button onclick="openPhoto('${a.id}', ${n})" class="group text-left space-y-2" aria-label="Open photo ${photoLabel(a, n)}">
+        <div class="aspect-square">${photoBox(photoSrc(a, n), photoLabel(a, n))}</div>
+        <span class="font-mono text-[9px] text-arch-textMuted uppercase tracking-widest">${photoLabel(a, n)}</span>
+      </button>`).join("")}</div>`;
+  document.getElementById("itsme-grid").scrollTop = 0;
+  if (window.innerWidth < 768) window.scrollTo({ top: 0 });
+}
+
 /* ---------- lightbox ---------- */
+let lbPhoto = null;
+function setLbMode(photo) {
+  document.getElementById("lb-photo-nav").hidden = !photo;
+  document.getElementById("lb-hint").hidden = photo;
+}
 function openLightbox(key, caption) {
+  lbPhoto = null; setLbMode(false);
   document.getElementById("lightbox-draw").innerHTML = DRAWINGS[key]();
   document.getElementById("lightbox-caption").textContent = caption.toUpperCase();
   document.getElementById("lightbox-modal").hidden = false;
 }
-function closeLightbox() { document.getElementById("lightbox-modal").hidden = true; }
+function renderPhoto() {
+  const a = ALBUMS.find(x => x.id === lbPhoto.id), n = lbPhoto.n;
+  document.getElementById("lightbox-draw").innerHTML = photoBox(photoSrc(a, n), photoLabel(a, n), { fit: "contain" });
+  document.getElementById("lightbox-caption").textContent = `ITSME / ${a.title.toUpperCase()} / ${photoLabel(a, n)}`;
+  document.getElementById("lb-photo-count").textContent = `${String(n).padStart(2, "0")} / ${String(a.photos.length).padStart(2, "0")}`;
+}
+function openPhoto(id, n) {
+  lbPhoto = { id, n }; setLbMode(true); renderPhoto();
+  document.getElementById("lightbox-modal").hidden = false;
+}
+function stepPhoto(d) {
+  if (!lbPhoto) return;
+  const a = ALBUMS.find(x => x.id === lbPhoto.id);
+  const len = a.photos.length;
+  lbPhoto.n = ((lbPhoto.n - 1 + d + len) % len) + 1;
+  renderPhoto();
+}
+function closeLightbox() { document.getElementById("lightbox-modal").hidden = true; lbPhoto = null; }
+showAlbums();
 
 /* ---------- contact ---------- */
 function copyEmail(btn) {
