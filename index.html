@@ -1,0 +1,498 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Ji Yeon Im Portfolio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@200;300;400;500;600&family=JetBrains+Mono:wght@200;300;400&display=swap">
+<script>
+  tailwind.config = {
+    theme: { extend: {
+      fontFamily: {
+        sans: ['"Josefin Sans"', '"Apple SD Gothic Neo"', '"Malgun Gothic"', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+      },
+      colors: { arch: {
+        bg: 'var(--bg)', card: 'var(--card)', surface: 'var(--surface)',
+        textPrimary: 'var(--text)', textMuted: 'var(--muted)', line: 'var(--line)'
+      } }
+    } }
+  }
+</script>
+<style>
+  /* Layout: single-screen book-spread slideshow on desktop; scrolls as a normal page on phones */
+  :root { --bg:#fcfcfc; --card:#ffffff; --surface:#f2f2f2; --text:#111111; --muted:#8e8e93; --line:#e4e4e7; --water:#0e7490; --water-fill:rgba(14,116,144,.08); --shadow:rgba(0,0,0,.08); --spine:rgba(0,0,0,.04); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#0f0f10; --card:#18181b; --surface:#161618; --text:#ececec; --muted:#8e8e93; --line:#2a2a2e; --water:#3fc1d9; --water-fill:rgba(63,193,217,.10); --shadow:rgba(0,0,0,.5); --spine:rgba(0,0,0,.25); color-scheme:dark } }
+  :root[data-theme="dark"] { --bg:#0f0f10; --card:#18181b; --surface:#161618; --text:#ececec; --muted:#8e8e93; --line:#2a2a2e; --water:#3fc1d9; --water-fill:rgba(63,193,217,.10); --shadow:rgba(0,0,0,.5); --spine:rgba(0,0,0,.25); color-scheme:dark }
+
+  html, body { height: 100%; }
+  body { background: var(--bg); color: var(--text); }
+  @media (min-width: 768px) { html, body { overflow: hidden; } }
+  ::selection { background: var(--text); color: var(--bg); }
+
+  #app {
+    min-height: 100%;
+    padding-block: 24px;
+    padding-left: max(24px, env(safe-area-inset-left, 0px));
+    padding-right: max(24px, env(safe-area-inset-right, 0px));
+  }
+  @media (min-width: 768px) {
+    #app { height: 100%; padding-block: 40px; padding-left: max(40px, env(safe-area-inset-left, 0px)); padding-right: max(40px, env(safe-area-inset-right, 0px)); }
+  }
+  .chrome { user-select: none; }
+
+  .slide { animation: fadeIn .35s ease-in-out; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  .spread-shadow { box-shadow: 0 25px 60px -15px var(--shadow); }
+  .spine-shadow { background: linear-gradient(90deg, var(--spine) 0%, transparent 8%, transparent 92%, var(--spine) 100%); }
+
+  /* line drawings */
+  .draw svg { width: 100%; height: 100%; display: block; }
+  .ln  { stroke: currentColor; fill: none; stroke-width: .7; }
+  .ln-f { stroke: currentColor; fill: var(--card); stroke-width: .7; stroke-linejoin: round; }
+  .ln-top { stroke: currentColor; fill: var(--surface); stroke-width: .7; stroke-linejoin: round; }
+  .ln-d { stroke: currentColor; fill: none; stroke-width: .5; stroke-dasharray: 3 2; }
+  .ln-h { stroke: currentColor; fill: none; stroke-width: .35; opacity: .6; }
+  .tx { fill: var(--muted); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 7px; letter-spacing: .08em; }
+  .water { stroke: var(--water); fill: var(--water-fill); stroke-width: .8; }
+  .water-l { stroke: var(--water); fill: none; stroke-width: .7; }
+
+  :focus-visible { outline: 1px solid var(--text); outline-offset: 3px; }
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-thumb { background: var(--line); }
+  @media (prefers-reduced-motion: reduce) { *, .slide { animation: none !important; transition: none !important; } }
+</style>
+
+<div id="app" class="text-arch-textPrimary font-sans antialiased flex flex-col justify-between gap-4">
+
+  <!-- TOP HEADER / NAV BAR -->
+  <header class="chrome flex justify-between items-center w-full z-30 font-sans tracking-widest uppercase text-xs">
+    <div class="flex items-center space-x-4">
+      <button onclick="goToSlide(0)" class="font-normal text-sm md:text-base tracking-widest text-arch-textPrimary hover:opacity-60 transition-opacity">
+        Ji Yeon Im
+      </button>
+      <span class="text-arch-textMuted font-light hidden sm:inline">/</span>
+      <span class="text-arch-textMuted text-[10px] md:text-xs font-light hidden sm:inline tracking-wider">PORTFOLIO 2025-26</span>
+    </div>
+
+    <nav class="hidden lg:flex items-center space-x-8 text-[11px] tracking-widest" aria-label="Slides">
+      <button onclick="goToSlide(0)" class="nav-btn transition-colors hover:text-arch-textPrimary uppercase py-1" id="nav-0">01. Overview</button>
+      <button onclick="goToSlide(1)" class="nav-btn transition-colors hover:text-arch-textPrimary uppercase py-1" id="nav-1">02. Hidden Rivers</button>
+      <button onclick="goToSlide(2)" class="nav-btn transition-colors hover:text-arch-textPrimary uppercase py-1" id="nav-2">03. Tactile Process</button>
+      <button onclick="goToSlide(3)" class="nav-btn transition-colors hover:text-arch-textPrimary uppercase py-1" id="nav-3">04. Layer Inspector</button>
+      <button onclick="goToSlide(4)" class="nav-btn transition-colors hover:text-arch-textPrimary uppercase py-1" id="nav-4">05. About & CV</button>
+    </nav>
+
+    <div class="flex items-center space-x-6 text-xs font-mono">
+      <button onclick="toggleDarkMode()" class="text-arch-textMuted hover:text-arch-textPrimary transition-colors p-1" aria-label="Toggle theme" id="theme-btn"></button>
+      <button onclick="goToSlide(4)" class="font-sans text-[11px] uppercase tracking-widest hover:opacity-60 transition-opacity">INFO</button>
+    </div>
+  </header>
+
+  <!-- MAIN WORKSPACE -->
+  <main class="flex-1 min-h-0 w-full max-w-7xl mx-auto flex relative md:overflow-hidden py-4">
+
+    <!-- ================= SLIDE 0: OVERVIEW ================= -->
+    <section id="slide-0" class="slide w-full md:h-full flex flex-col justify-between gap-8 py-2">
+      <div class="space-y-3 max-w-3xl">
+        <p class="font-mono text-[10px] uppercase tracking-widest text-arch-textMuted">STUDIO 01 — BARC0089 SUBMISSION</p>
+        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extralight tracking-wider uppercase leading-none">
+          Anatomy of Hidden Surfaces
+        </h1>
+        <p class="text-xs sm:text-sm font-light text-arch-textMuted tracking-wide leading-relaxed pt-2 max-w-2xl">
+          A collection of architectural inquiries into spatial tectonics, tactile material experiments, and vector drawing layers created at The Bartlett School of Architecture.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 my-auto">
+        <button onclick="goToSlide(1)" class="group text-left space-y-3">
+          <div class="draw aspect-[4/3] bg-arch-surface overflow-hidden flex items-center justify-center p-4 text-arch-textPrimary opacity-80 group-hover:opacity-100 transition-opacity">
+            <div class="w-full h-full group-hover:scale-105 transition-transform duration-500" data-draw="axo"></div>
+          </div>
+          <div class="space-y-1">
+            <span class="font-mono text-[9px] text-arch-textMuted uppercase tracking-widest">PROJ 01 / HYDROLOGY</span>
+            <h3 class="text-xs uppercase tracking-wider font-normal group-hover:underline">Anatomy of Hidden Rivers</h3>
+          </div>
+        </button>
+
+        <button onclick="goToSlide(2)" class="group text-left space-y-3">
+          <div class="draw aspect-[4/3] bg-arch-surface overflow-hidden flex items-center justify-center p-6 text-arch-textPrimary opacity-70 group-hover:opacity-100 transition-opacity">
+            <svg viewBox="0 0 200 150" fill="none" stroke="currentColor" stroke-width="0.6">
+              <circle cx="100" cy="75" r="45" stroke-dasharray="2,2"/>
+              <rect x="50" y="40" width="100" height="70"/>
+              <line x1="30" y1="75" x2="170" y2="75"/>
+              <line x1="100" y1="20" x2="100" y2="130"/>
+            </svg>
+          </div>
+          <div class="space-y-1">
+            <span class="font-mono text-[9px] text-arch-textMuted uppercase tracking-widest">PROJ 02 / PROCESS</span>
+            <h3 class="text-xs uppercase tracking-wider font-normal group-hover:underline">Antimetropia Tactile Study</h3>
+          </div>
+        </button>
+
+        <button onclick="goToSlide(3)" class="group text-left space-y-3">
+          <div class="draw aspect-[4/3] bg-arch-surface overflow-hidden flex items-center justify-center p-4 text-arch-textPrimary opacity-80 group-hover:opacity-100 transition-opacity">
+            <div class="w-full h-full group-hover:scale-105 transition-transform duration-500" data-draw="model"></div>
+          </div>
+          <div class="space-y-1">
+            <span class="font-mono text-[9px] text-arch-textMuted uppercase tracking-widest">PROJ 03 / VECTOR</span>
+            <h3 class="text-xs uppercase tracking-wider font-normal group-hover:underline">Drawing Layer Inspector</h3>
+          </div>
+        </button>
+      </div>
+
+      <div class="chrome flex flex-wrap gap-2 justify-between items-center text-[10px] font-mono text-arch-textMuted">
+        <span>SELECT A PROJECT OR USE NAVIGATION TO EXPLORE</span>
+        <span class="tracking-widest">BARTLETT SCHOOL OF ARCHITECTURE</span>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 1: HIDDEN RIVERS (BOOK SPREAD) ================= -->
+    <section id="slide-1" class="slide w-full md:h-full flex flex-col justify-center" hidden>
+      <div class="spread-shadow bg-arch-card w-full max-w-5xl mx-auto md:aspect-[1.5/1] md:max-h-full grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-0 relative overflow-hidden p-6 md:p-12">
+        <div class="hidden md:block absolute inset-y-0 left-1/2 -translate-x-1/2 w-10 spine-shadow pointer-events-none z-10"></div>
+
+        <!-- Left Page -->
+        <div class="md:pr-10 flex flex-col justify-between gap-6 h-full min-w-0">
+          <div class="flex justify-between font-mono text-[9px] text-arch-textMuted uppercase tracking-widest">
+            <span>BARC0089</span><span>HIDDEN RIVERS</span>
+          </div>
+          <div class="my-auto space-y-4">
+            <button class="draw block w-full h-52 md:h-60 overflow-hidden group bg-arch-surface p-3 text-arch-textPrimary" onclick="openLightbox('axo', 'Hidden Rivers — Axonometric View')" aria-label="Enlarge axonometric view">
+              <div class="w-full h-full group-hover:scale-105 transition-transform duration-500" data-draw="axo"></div>
+            </button>
+            <p class="text-[11px] text-arch-textMuted font-light leading-relaxed">
+              <strong class="text-arch-textPrimary font-normal uppercase">Structural Frame:</strong> Elevated walkways anchored over water basins, providing continuous circulation during rainfall events.
+            </p>
+          </div>
+          <div class="font-mono text-[9px] text-arch-textMuted">PAGE_02</div>
+        </div>
+
+        <!-- Right Page -->
+        <div class="md:pl-10 flex flex-col justify-between gap-6 h-full min-w-0">
+          <div class="flex justify-between font-mono text-[9px] text-arch-textMuted uppercase tracking-widest">
+            <span>STUDIO 4C</span><span>Ji Yeon Im</span>
+          </div>
+          <div class="my-auto space-y-4">
+            <div class="grid grid-cols-2 gap-3">
+              <button class="draw h-28 md:h-32 bg-arch-surface p-2 text-arch-textPrimary hover:opacity-70 transition-opacity" onclick="openLightbox('model', 'Cast Model Study')" aria-label="Enlarge cast model study"><div class="w-full h-full" data-draw="model"></div></button>
+              <button class="draw h-28 md:h-32 bg-arch-surface p-2 text-arch-textPrimary hover:opacity-70 transition-opacity" onclick="openLightbox('joint', 'Joint Assembly Detail')" aria-label="Enlarge joint assembly detail"><div class="w-full h-full" data-draw="joint"></div></button>
+            </div>
+            <div class="space-y-1 font-light text-[11px]">
+              <h4 class="text-xs font-normal uppercase tracking-wider">Tectonic Assembly</h4>
+              <p class="text-arch-textMuted leading-relaxed">
+                Physical casting experiments utilizing plaster and timber joists to test structural legibility and light penetration.
+              </p>
+            </div>
+          </div>
+          <div class="flex justify-between font-mono text-[9px] text-arch-textMuted">
+            <span>PAGE_03</span><span>FIG 2.1 — 2.4</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 2: TACTILE PROCESS ================= -->
+    <section id="slide-2" class="slide w-full md:h-full flex flex-col justify-center" hidden>
+      <div class="max-w-4xl mx-auto w-full space-y-8">
+        <div class="text-center space-y-2">
+          <span class="font-mono text-[10px] text-arch-textMuted uppercase tracking-widest">EARLY STAGES & PROCESS</span>
+          <h2 class="text-2xl md:text-3xl font-light uppercase tracking-widest">Antimetropia Tactile Studies</h2>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 text-center" id="gestures"></div>
+        <p class="text-xs text-center text-arch-textMuted font-light max-w-xl mx-auto leading-relaxed">
+          Physical hand gesture experiments translating fabric handling and archive preservation movements into physical spatial models at V&A East Storehouse.
+        </p>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 3: VECTOR INSPECTOR ================= -->
+    <section id="slide-3" class="slide w-full md:h-full flex flex-col justify-between gap-6 py-2" hidden>
+      <div class="flex flex-wrap gap-4 justify-between items-end w-full max-w-5xl mx-auto">
+        <div>
+          <span class="font-mono text-[10px] text-arch-textMuted uppercase tracking-widest">INTERACTIVE VECTOR CANVAS</span>
+          <h2 class="text-xl md:text-2xl font-light uppercase tracking-wider">Drawing Layer Inspector</h2>
+        </div>
+        <div class="chrome flex flex-wrap gap-2 text-[11px] font-sans uppercase tracking-wider" role="group" aria-label="Drawing layers">
+          <button onclick="toggleLayer('structure')" id="btn-layer-structure" class="layer-btn px-3 py-1 border border-arch-line transition-all"></button>
+          <button onclick="toggleLayer('envelope')" id="btn-layer-envelope" class="layer-btn px-3 py-1 border border-arch-line transition-all"></button>
+          <button onclick="toggleLayer('water')" id="btn-layer-water" class="layer-btn px-3 py-1 border border-arch-line transition-all"></button>
+        </div>
+      </div>
+
+      <div class="w-full max-w-5xl mx-auto aspect-[2.2/1] bg-arch-card flex items-center justify-center relative p-4 md:p-8 transition-colors">
+        <svg id="vector-svg" class="w-full h-full text-arch-textPrimary" viewBox="0 0 800 350" fill="none" stroke="currentColor" role="img" aria-label="Section drawing with structure, envelope and hydrology layers">
+          <g id="svg-structure" class="transition-opacity duration-300" stroke-width="0.8">
+            <line x1="100" y1="300" x2="700" y2="300" stroke-width="1.2"/>
+            <line x1="150" y1="80" x2="150" y2="300"/>
+            <line x1="300" y1="80" x2="300" y2="300"/>
+            <line x1="450" y1="80" x2="450" y2="300"/>
+            <line x1="600" y1="80" x2="600" y2="300"/>
+            <path d="M150 160 L300 80 L450 160 L600 80 L750 160" stroke-width="0.6"/>
+            <line x1="100" y1="160" x2="700" y2="160"/>
+          </g>
+          <g id="svg-envelope" class="transition-opacity duration-300" style="stroke:var(--muted)" stroke-width="0.6" stroke-dasharray="4,3">
+            <rect x="120" y="60" width="560" height="200"/>
+            <path d="M120 60 L200 20 L600 20 L680 60"/>
+          </g>
+          <g id="svg-water" class="transition-opacity duration-300 water">
+            <path d="M100 300 C 200 320, 300 280, 400 310 C 500 330, 600 290, 700 300 L700 340 L100 340 Z"/>
+            <circle cx="300" cy="270" r="20"/>
+            <circle cx="600" cy="270" r="20"/>
+          </g>
+        </svg>
+        <span class="absolute bottom-2 right-3 font-mono text-[9px] text-arch-textMuted uppercase tracking-widest">SCALE 1:100 @ A1</span>
+      </div>
+
+      <div class="chrome flex flex-wrap gap-2 justify-between items-center w-full max-w-5xl mx-auto font-mono text-[10px] text-arch-textMuted uppercase">
+        <span>TOGGLE LAYERS TO INSPECT TECTONICS</span>
+        <span>BARC0089 DRAWING NO. 04</span>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 4: ABOUT & CV ================= -->
+    <section id="slide-4" class="slide w-full md:h-full flex flex-col justify-center" hidden>
+      <div class="max-w-3xl mx-auto w-full space-y-8 font-sans">
+        <div class="space-y-2 border-b border-arch-line pb-6">
+          <span class="font-mono text-[10px] text-arch-textMuted uppercase tracking-widest">CURRICULUM VITAE</span>
+          <h2 class="text-3xl font-light uppercase tracking-widest">Ji Yeon Im</h2>
+          <p class="text-xs text-arch-textMuted font-light leading-relaxed max-w-xl">
+            Architectural designer focusing on structural legibility, tactile materials, and urban water infrastructure. M.Arch Candidate at The Bartlett School of Architecture.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-xs font-light">
+          <div class="space-y-3">
+            <h4 class="font-normal uppercase tracking-wider text-xs">Education</h4>
+            <div class="space-y-1">
+              <p class="font-medium">M.Arch Architecture (Part II)</p>
+              <p class="text-arch-textMuted text-[11px]">The Bartlett School of Architecture, UCL (2024–2026)</p>
+            </div>
+            <div class="space-y-1 pt-2">
+              <p class="font-medium">B.Sc Architectural Studies</p>
+              <p class="text-arch-textMuted text-[11px]">Seoul National University (2018–2023)</p>
+            </div>
+          </div>
+          <div class="space-y-3">
+            <h4 class="font-normal uppercase tracking-wider text-xs">Experience</h4>
+            <div class="space-y-1">
+              <p class="font-medium">Architectural Assistant</p>
+              <p class="text-arch-textMuted text-[11px]">Foster + Partners, London (2023–2024)</p>
+            </div>
+            <div class="space-y-1 pt-2">
+              <p class="font-medium">Design Intern</p>
+              <p class="text-arch-textMuted text-[11px]">SANAA, Tokyo (2022)</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-4 flex flex-wrap gap-3 justify-between items-center text-xs font-mono text-arch-textMuted border-t border-arch-line">
+          <span class="flex items-center gap-3">
+            <span>CONTACT:</span>
+            <span id="email" class="text-arch-textPrimary select-all">minwoo.park@arch.com</span>
+            <button onclick="copyEmail(this)" class="font-sans text-[10px] uppercase tracking-widest border border-arch-line px-2 py-0.5 hover:text-arch-textPrimary">Copy</button>
+          </span>
+          <span class="font-sans uppercase tracking-widest text-[11px]">Portfolio PDF on request</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER CONTROLS & SLIDE COUNTER -->
+  <footer class="chrome flex justify-between items-center w-full z-30 font-mono text-xs text-arch-textMuted uppercase tracking-widest">
+    <div class="flex space-x-6">
+      <button onclick="prevSlide()" class="hover:text-arch-textPrimary transition-colors flex items-center gap-2" aria-label="Previous slide">
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M9 5H1M4.5 1.5 1 5l3.5 3.5"/></svg>
+        <span class="font-sans text-[11px]">PREV</span>
+      </button>
+      <button onclick="nextSlide()" class="hover:text-arch-textPrimary transition-colors flex items-center gap-2" aria-label="Next slide">
+        <span class="font-sans text-[11px]">NEXT</span>
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M1 5h8M5.5 1.5 9 5 5.5 8.5"/></svg>
+      </button>
+    </div>
+    <div id="slide-counter" class="text-arch-textPrimary">01 / 05</div>
+  </footer>
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox-modal" class="fixed inset-0 z-50 bg-black/90 flex flex-col justify-between p-6 md:p-10 text-white font-sans" hidden onclick="closeLightbox()">
+  <div class="flex justify-between items-center w-full font-mono text-xs text-zinc-400">
+    <span id="lightbox-caption">HIGH RESOLUTION DRAWING</span>
+    <button onclick="closeLightbox()" class="hover:text-white p-2" aria-label="Close">
+      <svg width="14" height="14" viewBox="0 0 14 14" stroke="currentColor" stroke-width="1.2"><path d="M1 1l12 12M13 1 1 13"/></svg>
+    </button>
+  </div>
+  <div class="draw my-auto w-full max-w-4xl mx-auto aspect-[4/3] max-h-[78vh] text-zinc-100" id="lightbox-draw" style="--card:#0b0b0c;--surface:#1a1a1c;--muted:#9a9aa0"></div>
+  <div class="font-mono text-[10px] text-zinc-500 text-center uppercase tracking-widest">CLICK ANYWHERE TO CLOSE INSPECTION</div>
+</div>
+
+<script>
+/* ---------- line drawings (replace with your own images later) ---------- */
+const f = n => n.toFixed(1);
+function isoBox(x, y, z, w, d, h, s, ox, oy, cls = "ln-f") {
+  const P = (a, b, c) => `${f(ox + (a - b) * 0.866 * s)} ${f(oy + (a + b) * 0.5 * s - c * s)}`;
+  return `<path class="ln-top" d="M${P(x,y,z+h)} L${P(x+w,y,z+h)} L${P(x+w,y+d,z+h)} L${P(x,y+d,z+h)} Z"/>`
+       + `<path class="${cls}" d="M${P(x,y+d,z)} L${P(x+w,y+d,z)} L${P(x+w,y+d,z+h)} L${P(x,y+d,z+h)} Z"/>`
+       + `<path class="${cls}" d="M${P(x+w,y,z)} L${P(x+w,y+d,z)} L${P(x+w,y+d,z+h)} L${P(x+w,y,z+h)} Z"/>`;
+}
+function isoPt(a, b, c, s, ox, oy) { return [ox + (a - b) * 0.866 * s, oy + (a + b) * 0.5 * s - c * s]; }
+
+const DRAWINGS = {
+  axo() {
+    const s = 1.25, ox = 175, oy = 120;
+    let g = isoBox(0, 0, 0, 160, 100, 8, s, ox, oy);
+    // water ripples on the basin
+    for (let yy = 15; yy < 100; yy += 17) {
+      let d = "";
+      for (let xx = 8; xx <= 152; xx += 6) {
+        const [px, py] = isoPt(xx, yy, 8 + Math.sin(xx / 6 + yy) * 1.4, s, ox, oy);
+        d += (xx === 8 ? "M" : "L") + f(px) + " " + f(py);
+      }
+      g += `<path class="water-l" d="${d}"/>`;
+    }
+    [[10,10],[75,10],[140,10],[10,84],[75,84],[140,84]].forEach(([x, y]) => g += isoBox(x, y, 8, 5, 5, 62, s, ox, oy));
+    g += isoBox(0, 0, 70, 160, 100, 4, s, ox, oy);
+    // walkway boards on deck
+    for (let xx = 10; xx < 160; xx += 10) {
+      const [a1, b1] = isoPt(xx, 2, 74, s, ox, oy), [a2, b2] = isoPt(xx, 98, 74, s, ox, oy);
+      g += `<line class="ln-h" x1="${f(a1)}" y1="${f(b1)}" x2="${f(a2)}" y2="${f(b2)}"/>`;
+    }
+    // rain
+    for (let i = 0; i < 22; i++) {
+      const x = 60 + (i * 47) % 290, y = 8 + (i * 29) % 40;
+      g += `<line class="ln-h" x1="${x}" y1="${y}" x2="${x - 4}" y2="${y + 10}"/>`;
+    }
+    return `<svg viewBox="0 0 400 300" role="img" aria-label="Axonometric of elevated walkway over water basin">${g}<text class="tx" x="14" y="290">AXO — 1:200</text></svg>`;
+  },
+  model() {
+    const s = 1.1, ox = 200, oy = 110;
+    const blocks = [[10,10,30,50,40],[50,20,40,30,70],[95,15,18,30,30],[20,70,70,35,25],[95,60,20,50,55]]
+      .sort((a, b) => (a[0] + a[1]) - (b[0] + b[1]));
+    let g = isoBox(0, 0, 0, 120, 120, 6, s, ox, oy);
+    blocks.forEach(([x, y, w, d, h]) => g += isoBox(x, y, 6, w, d, h, s, ox, oy));
+    return `<svg viewBox="0 0 400 300" role="img" aria-label="Cast plaster block model">${g}<text class="tx" x="14" y="290">CAST MODEL — PLASTER</text></svg>`;
+  },
+  joint() {
+    let g = `<rect class="ln-f" x="30" y="120" width="340" height="52"/>`;
+    g += `<rect class="ln-f" x="172" y="18" width="56" height="102"/><rect class="ln-f" x="172" y="172" width="56" height="110"/>`;
+    g += `<line class="ln-d" x1="172" y1="120" x2="172" y2="172"/><line class="ln-d" x1="228" y1="120" x2="228" y2="172"/>`;
+    for (let i = 0; i < 4; i++) g += `<path class="ln-h" d="M34 ${130 + i * 11} C 100 ${126 + i * 11}, 140 ${134 + i * 11}, 366 ${129 + i * 11}"/>`;
+    for (let i = 0; i < 3; i++) g += `<path class="ln-h" d="M${184 + i * 16} 22 C ${180 + i * 16} 60, ${190 + i * 16} 90, ${184 + i * 16} 116"/><path class="ln-h" d="M${184 + i * 16} 176 C ${190 + i * 16} 220, ${180 + i * 16} 250, ${184 + i * 16} 278"/>`;
+    [[200,134],[200,158]].forEach(([x, y]) => g += `<circle class="ln-f" cx="${x}" cy="${y}" r="5"/><path class="ln" d="M${x-3} ${y}h6M${x} ${y-3}v6"/>`);
+    g += `<path class="ln-h" d="M30 104 H370 M30 99 v10 M370 99 v10"/><text class="tx" x="200" y="98" text-anchor="middle">3400</text>`;
+    return `<svg viewBox="0 0 400 300" role="img" aria-label="Timber post and beam joint detail">${g}<text class="tx" x="14" y="296">JOINT DETAIL — 1:10 · 120×240 GLULAM</text></svg>`;
+  }
+};
+document.querySelectorAll("[data-draw]").forEach(el => el.innerHTML = DRAWINGS[el.dataset.draw]());
+
+/* gesture diagrams (slide 2) */
+const GESTURES = [
+  ["01. DRAGGING", "Linear Tension", `<circle cx="18" cy="50" r="3" fill="currentColor"/><path class="ln" d="M22 50H80M73 44l7 6-7 6"/><path class="ln-h" d="M22 40 H70 M22 60 H70"/>`],
+  ["02. PINCHING", "Compression", `<path class="ln" d="M12 50h22M28 44l6 6-6 6M88 50H66M72 44l-6 6 6 6"/><path class="ln" d="M44 30 L50 38 L44 46 L50 54 L44 62 L50 70 M56 30 L50 38"/>`],
+  ["03. TRACING", "Contour Mapping", `<path class="ln" d="M50 20c18 2 30 14 28 30s-16 30-32 28-28-16-26-32 12-28 30-26z"/><path class="ln-h" d="M50 32c10 1 18 9 16 18s-10 18-18 17-17-10-16-19 8-17 18-16z"/><circle cx="49" cy="50" r="2" fill="currentColor"/>`],
+  ["04. FOLDING", "Layered Volume", `<path class="ln-f" d="M14 64 L36 52 L58 64 L80 52 L80 34 L58 46 L36 34 L14 46 Z"/><path class="ln-h" d="M36 34 V52 M58 46 V64"/>`]
+];
+document.getElementById("gestures").innerHTML = GESTURES.map(([n, t, svg]) => `
+  <div class="space-y-3 p-4 bg-arch-card transition-colors">
+    <div class="draw aspect-square flex items-center justify-center text-arch-textMuted p-4"><svg viewBox="0 0 100 100">${svg}</svg></div>
+    <div class="space-y-1">
+      <span class="font-mono text-[9px] text-arch-textMuted block">${n}</span>
+      <h4 class="text-xs uppercase tracking-wider font-light">${t}</h4>
+    </div>
+  </div>`).join("");
+
+/* ---------- slides ---------- */
+let currentSlide = 0;
+const totalSlides = 5;
+function goToSlide(index) {
+  if (index < 0 || index >= totalSlides) return;
+  for (let i = 0; i < totalSlides; i++) {
+    document.getElementById(`slide-${i}`).hidden = i !== index;
+    const nav = document.getElementById(`nav-${i}`);
+    if (nav) {
+      nav.classList.toggle("text-arch-textPrimary", i === index);
+      nav.classList.toggle("text-arch-textMuted", i !== index);
+      nav.toggleAttribute("aria-current", i === index);
+    }
+  }
+  currentSlide = index;
+  document.getElementById("slide-counter").textContent = `${String(index + 1).padStart(2, "0")} / ${String(totalSlides).padStart(2, "0")}`;
+  if (window.innerWidth < 768) window.scrollTo({ top: 0 });
+  try { sessionStorage.setItem("pf-slide", index); } catch (_) {}
+}
+function prevSlide() { goToSlide((currentSlide - 1 + totalSlides) % totalSlides); }
+function nextSlide() { goToSlide((currentSlide + 1) % totalSlides); }
+
+window.addEventListener("keydown", e => {
+  const lbOpen = !document.getElementById("lightbox-modal").hidden;
+  if (e.key === "Escape") closeLightbox();
+  if (lbOpen) return;
+  if (e.key === "ArrowRight") nextSlide();
+  if (e.key === "ArrowLeft") prevSlide();
+});
+
+/* swipe on touch screens */
+let tx = null, ty = null;
+document.addEventListener("touchstart", e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+document.addEventListener("touchend", e => {
+  if (tx === null || !document.getElementById("lightbox-modal").hidden) return;
+  const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+  if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) dx < 0 ? nextSlide() : prevSlide();
+  tx = ty = null;
+}, { passive: true });
+
+/* ---------- theme ---------- */
+const MOON = `<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M13.5 10A6 6 0 0 1 6 2.5a6 6 0 1 0 7.5 7.5z"/></svg>`;
+const SUN = `<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.4 1.4M11.6 11.6 13 13M3 13l1.4-1.4M11.6 4.4 13 3"/></svg>`;
+function isDark() {
+  const t = document.documentElement.getAttribute("data-theme");
+  return t ? t === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+}
+function paintThemeIcon() { document.getElementById("theme-btn").innerHTML = isDark() ? SUN : MOON; }
+function toggleDarkMode() {
+  document.documentElement.setAttribute("data-theme", isDark() ? "light" : "dark");
+  paintThemeIcon();
+}
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", paintThemeIcon);
+new MutationObserver(paintThemeIcon).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+paintThemeIcon();
+
+/* ---------- layer inspector ---------- */
+const LAYER_NAMES = { structure: "Grid", envelope: "Envelope", water: "Hydrology" };
+const layers = { structure: true, envelope: true, water: true };
+function paintLayer(layer) {
+  const on = layers[layer], btn = document.getElementById(`btn-layer-${layer}`);
+  document.getElementById(`svg-${layer}`).style.opacity = on ? "1" : "0.05";
+  btn.textContent = `${LAYER_NAMES[layer]} [${on ? "ON" : "OFF"}]`;
+  btn.setAttribute("aria-pressed", on);
+  btn.classList.toggle("bg-arch-textPrimary", on);
+  btn.classList.toggle("text-arch-bg", on);
+  btn.classList.toggle("text-arch-textMuted", !on);
+}
+function toggleLayer(layer) { layers[layer] = !layers[layer]; paintLayer(layer); }
+Object.keys(layers).forEach(paintLayer);
+
+/* ---------- lightbox ---------- */
+function openLightbox(key, caption) {
+  document.getElementById("lightbox-draw").innerHTML = DRAWINGS[key]();
+  document.getElementById("lightbox-caption").textContent = caption.toUpperCase();
+  document.getElementById("lightbox-modal").hidden = false;
+}
+function closeLightbox() { document.getElementById("lightbox-modal").hidden = true; }
+
+/* ---------- contact ---------- */
+function copyEmail(btn) {
+  const el = document.getElementById("email");
+  const done = t => { btn.textContent = t; setTimeout(() => btn.textContent = "Copy", 1500); };
+  const fallback = () => { const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); done("Selected"); };
+  try { navigator.clipboard.writeText(el.textContent).then(() => done("Copied"), fallback); } catch (_) { fallback(); }
+}
+
+/* restore slide */
+let start = 0;
+try { start = parseInt(sessionStorage.getItem("pf-slide") || "0", 10) || 0; } catch (_) {}
+goToSlide(start);
+</script>
+
+</body></html>
