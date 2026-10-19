@@ -22,7 +22,7 @@
 <style>
   /* Layout: single-screen book-spread slideshow on desktop; scrolls as a normal page on phones */
   :root { --bg:#fcfcfc; --card:#ffffff; --surface:#f2f2f2; --text:#111111; --muted:#8e8e93; --line:#e4e4e7; --water:#0e7490; --water-fill:rgba(14,116,144,.08); --shadow:rgba(0,0,0,.08); --spine:rgba(0,0,0,.04); }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#0f0f10; --card:#18181b; --surface:#161618; --text:#ececec; --muted:#8e8e93; --line:#2a2a2e; --water:#3fc1d9; --water-fill:rgba(63,193,217,.10); --shadow:rgba(0,0,0,.5); --spine:rgba(0,0,0,.25); color-scheme:dark } }
+  
   :root[data-theme="dark"] { --bg:#0f0f10; --card:#18181b; --surface:#161618; --text:#ececec; --muted:#8e8e93; --line:#2a2a2e; --water:#3fc1d9; --water-fill:rgba(63,193,217,.10); --shadow:rgba(0,0,0,.5); --spine:rgba(0,0,0,.25); color-scheme:dark }
 
   html, body { height: 100%; }
@@ -481,7 +481,7 @@ const MOON = `<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke
 const SUN = `<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.4 1.4M11.6 11.6 13 13M3 13l1.4-1.4M11.6 4.4 13 3"/></svg>`;
 function isDark() {
   const t = document.documentElement.getAttribute("data-theme");
-  return t ? t === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  return t ? t === "dark" : return t === "dark";
 }
 function paintThemeIcon() { document.getElementById("theme-btn").innerHTML = isDark() ? SUN : MOON; }
 function toggleDarkMode() {
